@@ -6,6 +6,7 @@ Enabled: true
 
 # Configuration for server1
 # Server name must be the same as your bungecord configuration
+
 server1:
   enabled: true
   url: "https://yourcraftyip.com"
