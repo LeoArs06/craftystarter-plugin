@@ -6,7 +6,7 @@
 
     <groupId>ares06</groupId>
     <artifactId>craftystarter</artifactId>
-    <version>1.0-SNAPSHOT-BUNGEE</version>
+    <version>1.0-RELEASE-BUNGEE</version>
     <packaging>jar</packaging>
 
     <name>craftystarter</name>
