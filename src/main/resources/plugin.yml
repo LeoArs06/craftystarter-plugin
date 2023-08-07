@@ -1,4 +1,9 @@
 name: craftystarter
+author: ares06
 version: '${project.version}'
 main: ares06.craftystarter.Craftystarter
 api-version: '1.20'
+commands:
+  startserver:
+    description: Start a server
+    usage: /startserver <server_name>
