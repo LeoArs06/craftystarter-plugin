@@ -1,0 +1,4 @@
+name: craftystarter
+version: '${project.version}'
+main: ares06.craftystarter.Craftystarter
+api-version: '1.20'
