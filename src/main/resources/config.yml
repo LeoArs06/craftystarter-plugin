@@ -1,13 +1,30 @@
-#Craftystarter plugin by ares06
-#v1.0
+# Craftystarter plugin by ares06
+# v1.0
 
-#enable or disable plugin
+# Enable or disable the plugin
 Enabled: true
 
+# Configuration for server1
 server1:
   enabled: true
   url: "https://yourcraftyip.com"
-  token: "your crafty api"
-  id: "your server id ex: 5"
-  ip: "yourserverip"
+  token: "your_crafty_api"
+  id: "your_server_id"
+  ip: "your_server_ip"
+
+# Configuration for server2
+server2:
+  enabled: false
+  url: "https://anothercraftyip.com"
+  token: "another_crafty_api"
+  id: "another_server_id"
+  ip: "another_server_ip"
+
+# You can continue adding more server configurations in a similar format
+server3:
+  enabled: false
+  url: "https://yetanothercraftyip.com"
+  token: "yet_another_crafty_api"
+  id: "yet_another_server_id"
+  ip: "yet_another_server_ip"
 
