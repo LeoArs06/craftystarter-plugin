@@ -6,7 +6,7 @@
 
     <groupId>ares06</groupId>
     <artifactId>craftystarter</artifactId>
-    <version>1.1-BETA</version>
+    <version>1.0-RELEASE</version>
     <packaging>jar</packaging>
 
     <name>craftystarter</name>
