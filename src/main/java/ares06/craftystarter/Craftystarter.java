@@ -5,11 +5,16 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.entity.Player;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 public final class Craftystarter extends JavaPlugin {
     @Override
     public void onEnable() {
+
+        this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+
         saveDefaultConfig();
         if (!getConfig().getBoolean("Enabled")) {
             getLogger().info("ServerStartPlugin is disabled in the configuration.");
@@ -34,6 +39,21 @@ public final class Craftystarter extends JavaPlugin {
             return HttpUtils.isServerOnline(ipAddress, port);
         }
         return false;
+    }
+
+    private void sendBungeeCommand(Player player, String targetServer) {
+        ByteArrayOutputStream b = new ByteArrayOutputStream();
+        DataOutputStream out = new DataOutputStream(b);
+
+        try {
+            out.writeUTF("ConnectOther"); // Tipo di messaggio
+            out.writeUTF(player.getName()); // Nome del giocatore a cui inviare il comando
+            out.writeUTF(targetServer); // Nome del server a cui connettere il giocatore
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        player.sendPluginMessage(this, "BungeeCord", b.toByteArray());
     }
 
     // Execute post request for starting the server using Crafty API
@@ -94,12 +114,11 @@ public final class Craftystarter extends JavaPlugin {
                         } catch (IOException e) {
                             sender.sendMessage("An error occurred while starting the server: " + e.getMessage());
                         }
+                    } else {
+                        // Redirect the player to another server using BungeeCord /server command
+                        sendBungeeCommand(player, serverName);
+                        player.sendMessage("Redirecting to " + serverName + "...");
                     }
-
-                    // Redirect the player to another server using BungeeCord /server command
-                    String bungeeCommand = "server " + serverName;
-                    player.sendMessage("Redirecting to " + serverName + "...");;
-                    player.performCommand(bungeeCommand);
                 } else {
                     sender.sendMessage(serverName + " server is currently disabled.");
                 }
