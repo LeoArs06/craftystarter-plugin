@@ -1,10 +1,11 @@
-# Craftystarter plugin by ares06
-# v1.0
+# Craftystarter-bungecord plugin by ares06
+# v1.0-bungecord
 
 # Enable or disable the plugin
 Enabled: true
 
 # Configuration for server1
+# Server name must be the same as your bungecord configuration
 server1:
   enabled: true
   url: "https://yourcraftyip.com"
