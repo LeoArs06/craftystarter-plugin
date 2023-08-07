@@ -97,7 +97,7 @@ public final class Craftystarter extends JavaPlugin {
                     }
 
                     // Redirect the player to another server using BungeeCord /server command
-                    String bungeeCommand = "/server " + serverName;
+                    String bungeeCommand = "server " + serverName;
                     player.sendMessage("Redirecting to " + serverName + "...");;
                     player.performCommand(bungeeCommand);
                 } else {
