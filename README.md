@@ -33,7 +33,7 @@ Once the CraftyStarter plugin is enabled and configured, you can use the followi
 
 ### Normal version
 - `/startserver <server_name>`: Allows players to start a specific server. If the server is offline, it will be started automatically. If the server is online, nothing happens.
-- 
+
 ### Bungee version
 - `/joinserver <server_name>`: Allows players to join a specific server. If the server is offline, it will be started automatically. If the server is online, the player will be redirected using BungeeCord.
 
@@ -49,4 +49,3 @@ For any inquiries or support, feel free to contact the author.
 
 ---
 
-**Note:** This documentation is based on the plugin code available as of my last knowledge update in September 2021. If there have been any updates or changes to the plugin after this date, please refer to the latest plugin documentation or source code for accurate information.
