@@ -1,0 +1,13 @@
+#Craftystarter plugin by ares06
+#v1.0
+
+#enable or disable plugin
+Enabled: true
+
+server1:
+  enabled: true
+  url: "https://yourcraftyip.com"
+  token: "your crafty api"
+  id: "your server id ex: 5"
+  ip: "yourserverip"
+
