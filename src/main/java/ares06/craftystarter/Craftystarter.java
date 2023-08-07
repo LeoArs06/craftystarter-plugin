@@ -3,6 +3,7 @@ package ares06.craftystarter;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.entity.Player;
 
 import java.io.IOException;
 
@@ -55,6 +56,7 @@ public final class Craftystarter extends JavaPlugin {
         }
     }
 
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!getConfig().getBoolean("Enabled")) {
@@ -62,33 +64,47 @@ public final class Craftystarter extends JavaPlugin {
             return true;
         }
 
-        if (label.equalsIgnoreCase("startserver")) {
+        if (label.equalsIgnoreCase("joinserver")) {
+            if (!(sender instanceof Player)) {
+                sender.sendMessage("This command can only be used by players.");
+                return true;
+            }
+
+            Player player = (Player) sender;
+
             if (args.length < 1) {
-                sender.sendMessage("Usage: /startserver <server_name>");
+                sender.sendMessage("Usage: /joinserver <server_name>");
                 return true;
             }
 
             String serverName = args[0];
-            if (getConfig().getBoolean(serverName + ".enabled")) {
-                String ip = getConfig().getString(serverName + ".ip");
-                if (!isServerOnline(ip)) {
-                    sender.sendMessage("The server is offline. Starting it now...");
-
-                    try {
-                        String response = startServer(serverName);
-                        if (response != null && response.contains("\"status\":\"ok\"")) {
-                            sender.sendMessage("Server started successfully.");
-                        } else {
-                            sender.sendMessage("An error occurred while starting the server.");
+            if (getConfig().contains(serverName)) {
+                boolean serverEnabled = getConfig().getBoolean(serverName + ".enabled");
+                if (serverEnabled) {
+                    String ip = getConfig().getString(serverName + ".ip");
+                    if (!isServerOnline(ip)) {
+                        // Server is offline, start it
+                        try {
+                            String response = startServer(serverName);
+                            if (response != null && response.contains("\"status\":\"ok\"")) {
+                                sender.sendMessage("Server started successfully.");
+                            } else {
+                                sender.sendMessage("An error occurred while starting the server.");
+                            }
+                        } catch (IOException e) {
+                            sender.sendMessage("An error occurred while starting the server: " + e.getMessage());
                         }
-                    } catch (IOException e) {
-                        sender.sendMessage("An error occurred while starting the server: " + e.getMessage());
                     }
+
+                    // Redirect the player to another server using BungeeCord /server command
+                    String bungeeCommand = "/server " + serverName;
+                    player.sendMessage("Redirecting to " + serverName + "...");;
+                    player.performCommand(bungeeCommand);
                 } else {
-                    sender.sendMessage("The server is already online.");
+                    sender.sendMessage(serverName + " server is currently disabled.");
                 }
             } else {
-                sender.sendMessage(serverName + " server is currently disabled.");
+                sender.sendMessage("Server configuration for '" + serverName + "' not found.");
             }
 
             return true;
