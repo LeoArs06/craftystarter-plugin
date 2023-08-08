@@ -4,8 +4,12 @@
 # Enable or disable the plugin
 Enabled: true
 
+# Enable or disable bungeecord join feature
+BungeeCord: true
+
 # Configuration for server1
 # Server name must be the same as your bungecord configuration
+# If you want to use bungeecord join feature
 
 server1:
   enabled: true
@@ -14,19 +18,4 @@ server1:
   id: "your_server_id"
   ip: "your_server_ip"
 
-# Configuration for server2
-server2:
-  enabled: false
-  url: "https://anothercraftyip.com"
-  token: "another_crafty_api"
-  id: "another_server_id"
-  ip: "another_server_ip"
-
 # You can continue adding more server configurations in a similar format
-server3:
-  enabled: false
-  url: "https://yetanothercraftyip.com"
-  token: "yet_another_crafty_api"
-  id: "yet_another_server_id"
-  ip: "yet_another_server_ip"
-
