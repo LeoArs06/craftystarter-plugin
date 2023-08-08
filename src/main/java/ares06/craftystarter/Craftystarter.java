@@ -2,18 +2,30 @@ package ares06.craftystarter;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.ChatColor;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
 
+
 public final class Craftystarter extends JavaPlugin {
+    private YamlConfiguration messagesConfig;
     @Override
     public void onEnable() {
 
         this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+
+        // Load messages from messages.yml
+        File messagesFile = new File(getDataFolder(), "messages.yml");
+        if (!messagesFile.exists()) {
+            saveResource("messages.yml", false);
+        }
+        messagesConfig = YamlConfiguration.loadConfiguration(messagesFile);
 
         saveDefaultConfig();
         if (!getConfig().getBoolean("Enabled")) {
@@ -28,6 +40,16 @@ public final class Craftystarter extends JavaPlugin {
     @Override
     public void onDisable() {
         getLogger().info("ServerStartPlugin has been disabled.");
+    }
+
+    // method to get a formatted message from messages.yml
+    private String getFormattedMessage(String key, Object... args) {
+        String message = messagesConfig.getString("messages." + key);
+        if (message != null) {
+            String formattedMessage = ChatColor.translateAlternateColorCodes('&', message);
+            return String.format(formattedMessage, args);
+        }
+        return ChatColor.RED + "Message not found: " + key;
     }
 
     // Check if the server is online
@@ -78,7 +100,7 @@ public final class Craftystarter extends JavaPlugin {
 
     private boolean startCommand(CommandSender sender, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage("This command can only be used by players.");
+            sender.sendMessage(getFormattedMessage("command_player_only"));
             return true;
         }
 
@@ -99,28 +121,28 @@ public final class Craftystarter extends JavaPlugin {
                     try {
                         String response = startServer(serverName);
                         if (response != null && response.contains("\"status\":\"ok\"")) {
-                            sender.sendMessage("Server started successfully.");
+                            sender.sendMessage(getFormattedMessage("server_started"));
                         } else {
-                            sender.sendMessage("An error occurred while starting the server.");
+                            sender.sendMessage(getFormattedMessage("server_start_error", serverName));
                         }
                     } catch (IOException e) {
-                        sender.sendMessage("An error occurred while starting the server: " + e.getMessage());
+                        sender.sendMessage(getFormattedMessage("server_start_error", serverName) + e.getMessage());
                     }
                 } else {
-                    sender.sendMessage(serverName + " server is already online.");
+                    sender.sendMessage(getFormattedMessage("server_already_online"));
                 }
             } else {
-                sender.sendMessage(serverName + " server is currently disabled.");
+                sender.sendMessage(getFormattedMessage("server_disabled", serverName));
             }
         } else {
-            sender.sendMessage("Server configuration for '" + serverName + "' not found.");
+            sender.sendMessage(getFormattedMessage("server_not_found", serverName));
         }
         return true;
     }
 
     private boolean joinCommand(CommandSender sender, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage("This command can only be used by players.");
+            sender.sendMessage(getFormattedMessage("command_player_only"));
             return true;
         }
 
@@ -141,23 +163,23 @@ public final class Craftystarter extends JavaPlugin {
                     try {
                         String response = startServer(serverName);
                         if (response != null && response.contains("\"status\":\"ok\"")) {
-                            sender.sendMessage("Server started successfully.");
+                            sender.sendMessage(getFormattedMessage("server_started", serverName));
                         } else {
-                            sender.sendMessage("An error occurred while starting the server.");
+                            sender.sendMessage(getFormattedMessage("server_start_error", serverName));
                         }
                     } catch (IOException e) {
-                        sender.sendMessage("An error occurred while starting the server: " + e.getMessage());
+                        sender.sendMessage(getFormattedMessage("server_start_error", serverName) + e.getMessage());
                     }
                 } else {
                     // Redirect the player to another server using BungeeCord /server command
-                    player.sendMessage("Redirecting to " + serverName + "...");
+                    player.sendMessage(getFormattedMessage("redirecting", serverName));
                     sendBungeeCommand(player, serverName);
                 }
             } else {
-                sender.sendMessage(serverName + " server is currently disabled.");
+                sender.sendMessage(getFormattedMessage("server_disabled", serverName));
             }
         } else {
-            sender.sendMessage("Server configuration for '" + serverName + "' not found.");
+            sender.sendMessage(getFormattedMessage("server_not_found", serverName));
         }
         return true;
     }
@@ -165,15 +187,15 @@ public final class Craftystarter extends JavaPlugin {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!getConfig().getBoolean("Enabled")) {
-            sender.sendMessage("ServerStartPlugin is currently disabled.");
+            sender.sendMessage("CraftyStarter is currently disabled.");
             return true;
         }
 
         if (label.equalsIgnoreCase("joinserver")) {
-            if (getConfig().getBoolean("BungeeCordFeatures")) { // Assuming a config key "BungeeCordEnabled" is used
+            if (getConfig().getBoolean("BungeeCordFeatures")) { //check if bungeecord features is enables
                 return joinCommand(sender, args);
             } else {
-                sender.sendMessage("BungeeCord feature is not enabled in the configuration.");
+                sender.sendMessage(getFormattedMessage("bungeecord_disabled"));
                 return true;
             }
         } else if (label.equalsIgnoreCase("startserver")) {
