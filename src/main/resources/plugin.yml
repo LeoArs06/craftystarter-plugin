@@ -7,3 +7,6 @@ commands:
   joinserver:
     description: Join a server
     usage: /joinserver <server_name>
+  startserver:
+    description: Start a server
+    usage: /startserver <server_name>

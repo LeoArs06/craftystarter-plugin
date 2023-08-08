@@ -5,14 +5,14 @@
 Enabled: true
 
 # Enable or disable bungeecord join feature
-BungeeCord: true
+BungeeCordFeatures: false
 
 # Configuration for server1
 # Server name must be the same as your bungecord configuration
 # If you want to use bungeecord join feature
 
 server1:
-  enabled: true
+  enabled: false
   url: "https://yourcraftyip.com"
   token: "your_crafty_api"
   id: "your_server_id"
