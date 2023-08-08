@@ -1,0 +1,15 @@
+# messages.yml
+
+# Craftystarter plugin by ares06
+# v1.1
+
+messages:
+  command_player_only: "&cThis command can only be used by players."
+  server_disabled: "&cServer %s is currently disabled."
+  server_not_found: "&cServer configuration for '%s' not found."
+  server_already_online: "&a%s server is already online."
+  server_starting: "&aStarting server %s..."
+  server_started: "&aServer started successfully."
+  server_start_error: "&cAn error occurred while starting the server: %s"
+  bungeecord_disabled: "&cBungeeCord feature is not enabled in the configuration."
+  redirecting: "&aRedirecting to %s..."
