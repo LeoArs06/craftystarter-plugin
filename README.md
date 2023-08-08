@@ -6,6 +6,7 @@ The CraftyStarter plugin is a Bukkit Paper plugin that provides server ingame st
 
 - Automatically start servers using the Crafty API.
 - Redirect players to different servers using BungeeCord.
+- Users can modify various messages displayed by the plugin to suit their server environment.
 - Server inactivity shutdown using [inactivityshutdown plugin](https://github.com/LeoArs06/inactivityshutdown).
 
 ## Installation
@@ -31,11 +32,9 @@ Before using the CraftyStarter plugin, make sure to configure it properly in the
 
 Once the CraftyStarter plugin is enabled and configured, you can use the following commands:
 
-### Normal version
 - `/startserver <server_name>`: Allows players to start a specific server. If the server is offline, it will be started automatically. If the server is online, nothing happens.
 
-### Bungee version
-- `/joinserver <server_name>`: Allows players to join a specific server. If the server is offline, it will be started automatically. If the server is online, the player will be redirected using BungeeCord.
+- `/joinserver <server_name>`: Allows players to join a specific server. If the server is offline, it will be started automatically. If the server is online, the player will be redirected using BungeeCord if bungeecord feature is enabled in config.yml.
 
 ## License
 
