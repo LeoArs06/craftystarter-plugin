@@ -75,6 +75,7 @@ public final class Craftystarter extends JavaPlugin {
             throw new RuntimeException(e);
         }
     }
+
     private boolean startCommand(CommandSender sender, String[] args) {
         if (!(sender instanceof Player)) {
             sender.sendMessage("This command can only be used by players.");
@@ -169,7 +170,12 @@ public final class Craftystarter extends JavaPlugin {
         }
 
         if (label.equalsIgnoreCase("joinserver")) {
-            return joinCommand(sender, args);
+            if (getConfig().getBoolean("BungeeCordFeatures")) { // Assuming a config key "BungeeCordEnabled" is used
+                return joinCommand(sender, args);
+            } else {
+                sender.sendMessage("BungeeCord feature is not enabled in the configuration.");
+                return true;
+            }
         } else if (label.equalsIgnoreCase("startserver")) {
             return startCommand(sender, args);
         }
