@@ -75,7 +75,91 @@ public final class Craftystarter extends JavaPlugin {
             throw new RuntimeException(e);
         }
     }
+    private boolean startCommand(CommandSender sender, String[] args) {
+        if (!(sender instanceof Player)) {
+            sender.sendMessage("This command can only be used by players.");
+            return true;
+        }
 
+        Player player = (Player) sender;
+
+        if (args.length < 1) {
+            sender.sendMessage("Usage: /startserver <server_name>");
+            return true;
+        }
+
+        String serverName = args[0];
+        if (getConfig().contains(serverName)) {
+            boolean serverEnabled = getConfig().getBoolean(serverName + ".enabled");
+            if (serverEnabled) {
+                String ip = getConfig().getString(serverName + ".ip");
+                if (!isServerOnline(ip)) {
+                    // Server is offline, start it
+                    try {
+                        String response = startServer(serverName);
+                        if (response != null && response.contains("\"status\":\"ok\"")) {
+                            sender.sendMessage("Server started successfully.");
+                        } else {
+                            sender.sendMessage("An error occurred while starting the server.");
+                        }
+                    } catch (IOException e) {
+                        sender.sendMessage("An error occurred while starting the server: " + e.getMessage());
+                    }
+                } else {
+                    sender.sendMessage(serverName + " server is already online.");
+                }
+            } else {
+                sender.sendMessage(serverName + " server is currently disabled.");
+            }
+        } else {
+            sender.sendMessage("Server configuration for '" + serverName + "' not found.");
+        }
+        return true;
+    }
+
+    private boolean joinCommand(CommandSender sender, String[] args) {
+        if (!(sender instanceof Player)) {
+            sender.sendMessage("This command can only be used by players.");
+            return true;
+        }
+
+        Player player = (Player) sender;
+
+        if (args.length < 1) {
+            sender.sendMessage("Usage: /joinserver <server_name>");
+            return true;
+        }
+
+        String serverName = args[0];
+        if (getConfig().contains(serverName)) {
+            boolean serverEnabled = getConfig().getBoolean(serverName + ".enabled");
+            if (serverEnabled) {
+                String ip = getConfig().getString(serverName + ".ip");
+                if (!isServerOnline(ip)) {
+                    // Server is offline, start it
+                    try {
+                        String response = startServer(serverName);
+                        if (response != null && response.contains("\"status\":\"ok\"")) {
+                            sender.sendMessage("Server started successfully.");
+                        } else {
+                            sender.sendMessage("An error occurred while starting the server.");
+                        }
+                    } catch (IOException e) {
+                        sender.sendMessage("An error occurred while starting the server: " + e.getMessage());
+                    }
+                } else {
+                    // Redirect the player to another server using BungeeCord /server command
+                    player.sendMessage("Redirecting to " + serverName + "...");
+                    sendBungeeCommand(player, serverName);
+                }
+            } else {
+                sender.sendMessage(serverName + " server is currently disabled.");
+            }
+        } else {
+            sender.sendMessage("Server configuration for '" + serverName + "' not found.");
+        }
+        return true;
+    }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -85,48 +169,9 @@ public final class Craftystarter extends JavaPlugin {
         }
 
         if (label.equalsIgnoreCase("joinserver")) {
-            if (!(sender instanceof Player)) {
-                sender.sendMessage("This command can only be used by players.");
-                return true;
-            }
-
-            Player player = (Player) sender;
-
-            if (args.length < 1) {
-                sender.sendMessage("Usage: /joinserver <server_name>");
-                return true;
-            }
-
-            String serverName = args[0];
-            if (getConfig().contains(serverName)) {
-                boolean serverEnabled = getConfig().getBoolean(serverName + ".enabled");
-                if (serverEnabled) {
-                    String ip = getConfig().getString(serverName + ".ip");
-                    if (!isServerOnline(ip)) {
-                        // Server is offline, start it
-                        try {
-                            String response = startServer(serverName);
-                            if (response != null && response.contains("\"status\":\"ok\"")) {
-                                sender.sendMessage("Server started successfully.");
-                            } else {
-                                sender.sendMessage("An error occurred while starting the server.");
-                            }
-                        } catch (IOException e) {
-                            sender.sendMessage("An error occurred while starting the server: " + e.getMessage());
-                        }
-                    } else {
-                        // Redirect the player to another server using BungeeCord /server command
-                        sendBungeeCommand(player, serverName);
-                        player.sendMessage("Redirecting to " + serverName + "...");
-                    }
-                } else {
-                    sender.sendMessage(serverName + " server is currently disabled.");
-                }
-            } else {
-                sender.sendMessage("Server configuration for '" + serverName + "' not found.");
-            }
-
-            return true;
+            return joinCommand(sender, args);
+        } else if (label.equalsIgnoreCase("startserver")) {
+            return startCommand(sender, args);
         }
 
         return false;
